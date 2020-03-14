@@ -5,6 +5,12 @@ if setting then
 	curing_interval = setting
 end
 
+local use_buckets = 0
+setting = tonumber(minetest.settings:get("concrete_use_buckets"))
+if setting then
+	use_buckets = setting
+end
+
 
 minetest.register_craftitem("concrete:portland_cement", {
     description = "Bag of Portland Cement",
@@ -151,15 +157,32 @@ else
 	})
 end
 
-minetest.register_craft({
-    type = "shaped",
-    output = "concrete:bucket_concrete",
-    recipe = {
-        {"concrete:portland_cement", "concrete:portland_cement",  "concrete:portland_cement"},
-        {"concrete:portland_cement", "bucket:bucket_water",  "concrete:portland_cement"},
-        {"concrete:portland_cement", "concrete:portland_cement",  "concrete:portland_cement"}
-    }
-})
+if use_buckets == 1 then
+	minetest.register_craft({
+	    type = "shaped",
+	    output = "concrete:bucket_concrete",
+	    recipe = {
+	        {"concrete:portland_cement", "concrete:portland_cement",  "concrete:portland_cement"},
+	        {"concrete:portland_cement", "bucket:bucket_water",  "concrete:portland_cement"},
+	        {"concrete:portland_cement", "concrete:portland_cement",  "concrete:portland_cement"}
+	    }
+	})
+
+else
+	minetest.register_craft({
+	    type = "shaped",
+	    output = "concrete:concrete_uncured_source",
+	    recipe = {
+	        {"concrete:portland_cement", "concrete:portland_cement",  "concrete:portland_cement"},
+	        {"concrete:portland_cement", "bucket:bucket_water",  "concrete:portland_cement"},
+	        {"concrete:portland_cement", "concrete:portland_cement",  "concrete:portland_cement"}
+	    },
+			replacements = {
+				{"bucket:bucket_water","bucket:bucket_empty"}
+			},
+	})
+end
+
 
 minetest.register_craft({
     type = "cooking",
@@ -175,10 +198,8 @@ minetest.register_craft({
     output = "concrete:concrete_stair",
     recipe = {
         {"", "","concrete:concrete_cured"},
-	{"", "concrete:concrete_cured","concrete:concrete_cured"},
-	{"concrete:concrete_cured", "concrete:concrete_cured","concrete:concrete_cured"}
+				{"", "concrete:concrete_cured","concrete:concrete_cured"},
+				{"concrete:concrete_cured", "concrete:concrete_cured","concrete:concrete_cured"}
     }
 
 })
-
-
