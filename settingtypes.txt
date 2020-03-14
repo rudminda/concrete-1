@@ -1,0 +1,2 @@
+#interval (min 1) that the concrete curing abm runs globally and turns liquid concrete into solid concrete
+concrete_abm_curing_interval (Concrete Curing Interval) int 60 1
