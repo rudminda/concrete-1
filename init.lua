@@ -1,3 +1,11 @@
+
+local curing_interval = 60
+setting = tonumber(minetest.settings:get("concrete_abm_curing_interval"))
+if setting then
+	curing_interval = setting
+end
+
+
 minetest.register_craftitem("concrete:portland_cement", {
     description = "Bag of Portland Cement",
     inventory_image = "concrete_portland_cement.png"
@@ -117,7 +125,7 @@ minetest.register_node("concrete:concrete_uncured_flowing", {
 
 minetest.register_abm({
   nodenames = {"concrete:concrete_uncured_flowing","concrete:concrete_uncured_source"},
-  interval = 60,
+  interval = curing_interval,
   chance = 1,
   action = function(pos)
     minetest.add_node(pos, {name = "concrete:concrete_cured"})
@@ -172,3 +180,5 @@ minetest.register_craft({
     }
 
 })
+
+
