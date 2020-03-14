@@ -1,3 +1,8 @@
+minetest.register_craftitem("concrete:portland_cement", {
+    description = "Bag of Portland Cement",
+    inventory_image = "concrete_portland_cement.png"
+})
+
 minetest.register_node("concrete:concrete_cured", {
 	description = "Concrete",
 	tiles = {"concrete_cured.png"},
@@ -97,9 +102,22 @@ minetest.register_node("concrete:concrete_uncured_flowing", {
 })
 
 
+-- bucket --
+
+		bucket.register_liquid(
+		        "concrete:concrete_uncured_source",
+		        "concrete:concrete_uncured_flowing",
+		        "concrete:bucket_concrete",
+		        "concrete_bucket.png",
+		        "Bucket of Concrete"
+		)
+
+
+
+
 minetest.register_abm({
   nodenames = {"concrete:concrete_uncured_flowing","concrete:concrete_uncured_source"},
-  interval = 30,
+  interval = 60,
   chance = 1,
   action = function(pos)
     minetest.add_node(pos, {name = "concrete:concrete_cured"})
@@ -107,15 +125,41 @@ minetest.register_abm({
 })
 
 
+
+if minetest.get_modpath("moreblocks") then
+	minetest.register_craft({
+			type = "cooking",
+	    output = "concrete:portland_cement",
+	    recipe = "moreblocks:cobble_compressed",
+			cooktime = 5,
+	})
+
+else
+	minetest.register_craft({
+			type = "cooking",
+	    output = "concrete:portland_cement",
+	    recipe = "default:stone",
+			cooktime = 20,
+	})
+end
+
 minetest.register_craft({
-    type = "shapeless",
-    output = "concrete:concrete_uncured_source",
+    type = "shaped",
+    output = "concrete:bucket_concrete",
     recipe = {
-        "moreblocks:cobble_compressed 12",
-        "bucket:bucket_water",
-    },
+        {"concrete:portland_cement", "concrete:portland_cement",  "concrete:portland_cement"},
+        {"concrete:portland_cement", "bucket:bucket_water",  "concrete:portland_cement"},
+        {"concrete:portland_cement", "concrete:portland_cement",  "concrete:portland_cement"}
+    }
+})
+
+minetest.register_craft({
+    type = "cooking",
+    output = "concrete:concrete_cured 9",
+    recipe = "concrete:bucket_concrete",
+    cooktime = 10,
 		replacements = {
-			{"bucket:bucket_water","bucket:bucket_empty"}
+			{"concrete:bucket_concrete","bucket:bucket_empty"}
 		}
 })
 
@@ -123,8 +167,8 @@ minetest.register_craft({
     output = "concrete:concrete_stair",
     recipe = {
         {"", "","concrete:concrete_cured"},
-				{"", "concrete:concrete_cured","concrete:concrete_cured"},
-				{"concrete:concrete_cured", "concrete:concrete_cured","concrete:concrete_cured"}
+	{"", "concrete:concrete_cured","concrete:concrete_cured"},
+	{"concrete:concrete_cured", "concrete:concrete_cured","concrete:concrete_cured"}
     }
 
 })
